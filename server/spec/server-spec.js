@@ -50,6 +50,8 @@ describe('Persistent Node Chat Server', function() {
         var queryString = 'SELECT * FROM Messages';
         var queryArgs = [];
 
+                                     // NOTE: we removed queryArgs
+
         dbConnection.query(queryString, queryArgs, function(err, results) {
           // Should have one result:
           expect(results.length).to.equal(1);

@@ -4,6 +4,7 @@
   "main": "server/app.js",
   "dependencies": {
     "body-parser": "^1.9.2",
+    "cors": "^2.7.1",
     "express": "^4.10.1",
     "lodash": "^2.4.1",
     "morgan": "^1.4.1",
