@@ -19,18 +19,3 @@ module.exports = {
   }
 };
 
-
-
-/*
-
-Thoughts before lunch break:
-
-
-
-possible solutions
-1 - create a connect method on db module
-  - move .saveMessage and .saveUser methods into model (this code) 
-  - somehow check if connection is already open (or use pooling)
-    - if not, create a new one 
-
-*/
