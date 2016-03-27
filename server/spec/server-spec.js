@@ -39,7 +39,7 @@ describe('Persistent Node Chat Server', function() {
               json: {
                 username: 'Valjean',
                 message: 'In mercy\'s name, three days is all I need.',
-                roomname: 'Hello'
+                roomname: 'Lobby'
               }
       }, function () {
         // Now if we look in the database, we should find the
@@ -50,12 +50,14 @@ describe('Persistent Node Chat Server', function() {
         var queryString = 'SELECT * FROM Messages';
         var queryArgs = [];
 
+                                     // NOTE: we removed queryArgs
+
         dbConnection.query(queryString, queryArgs, function(err, results) {
           // Should have one result:
           expect(results.length).to.equal(1);
 
           // TODO: If you don't have a column named text, change this test.
-          expect(results[0].text).to.equal('In mercy\'s name, three days is all I need.');
+          expect(results[0].Text).to.equal('In mercy\'s name, three days is all I need.');
 
           done();
         });
