@@ -19,8 +19,7 @@ exports.saveMessage = function(body, table) {
   // connection.connect();
   var roomExists = false;
   var userExists = false;
-  var roomId;
-  var userId;
+  var roomId, userId;
 
   console.dir(queryAsync);
 
@@ -55,15 +54,33 @@ exports.saveMessage = function(body, table) {
       }
     });
 
-  // when userId and roomId are set 
-  promise.all([roomExistPromise, userExistPromise])
-  .then(function(roomUserIds) {
-    connection.query({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomUserIds[1], roomUserIds[0], body.message]}, function(error, results, fields) {
-      console.log('Message INSERT results: ', results);
-      console.log('Message INSERT error: ', error);
-      console.log('Message INSERT fields: ', fields);
 
-    });
+  // will use this promise in the call to promise.all after we have the roomId and userId
+  var messageSavePromise = queryAsync({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomId, userId, body.message]});
+  // var messageSavePromise = queryAsync({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [1, 1, 'test message']});
+
+
+  // when userId and roomId are set, then send messsage
+  // promise.all([roomExistPromise, userExistPromise])
+  // .then(function(roomUserIds) {
+  //   connection.query({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomUserIds[1], roomUserIds[0], body.message]}, function(error, results, fields) {
+  //     console.log('Message INSERT results: ', results);
+  //     console.log('Message INSERT error: ', error);
+  //     console.log('Message INSERT fields: ', fields);
+
+  //   });
+  // });
+
+  promise.all([roomExistPromise, userExistPromise])
+  .then(function() {
+    console.log('promise.all roomId: ', roomId);
+    console.log('promise.all userId: ', userId);
+    console.log('promise.all body.message: ', body.message);
+
+  })
+  .then(messageSavePromise)
+  .catch(function(error) {
+    console.log('messageSavePromise Error: ', error);
   });
 
   // connection.query('SELECT Id, Name FROM Rooms WHERE Name="' + body.roomname + '"', function(error, results, fields) {
