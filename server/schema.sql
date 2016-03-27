@@ -77,10 +77,7 @@ ALTER TABLE `Messages` ADD FOREIGN KEY (Room_ID) REFERENCES `Rooms` (`id`);
 -- ('','');
 
 
-/* Create other tables and define schemas for them here! 
-
-
-*/
+/* Create other tables and define schemas for them here! */
 
 
 

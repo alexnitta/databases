@@ -5,21 +5,41 @@ var queryAsync = promise.promisify(db.connection.query, {context: db.connection}
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
+    get: function (table) {
+      readMessages(table);
+    }, // a function which produces all the messages
     post: function (body, table) {
-      console.log('messages req.body in models: ', body);
       saveMessage(body, table);
     } // a function which can be used to insert a message into the database
   },
 
   users: {
     // Ditto as above.
-    get: function () {},
+    get: function (table) {
+      readUsers(table);
+    },
     post: function (body, table) {
-      console.log('users req.body in models: ', body);
       saveUser(body, table);
     }
   }
+};
+
+var readMessages = function(table) {
+  var readMessagesPromise = queryAsync('SELECT * from Messages');
+  readMessagesPromise
+  .then(function(results) {
+    console.log('readMessages results: ', results);
+    return results;
+  });
+};
+
+var readUsers = function(table) {
+  var readUsersPromise = queryAsync('SELECT * from Users');
+  readUsersPromise
+  .then(function(results) {
+    console.log('readUsers results: ', results);
+    return results;
+  });
 };
 
 var saveMessage = function(body, table) {
@@ -62,12 +82,11 @@ var saveMessage = function(body, table) {
   promise.all([roomExistPromise, userExistPromise])
   .then(function(roomUserIds) {
     var messageSavePromise = queryAsync({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomUserIds[1], roomUserIds[0], body.message]});
-  })
-  .then(messageSavePromise)
-  .catch(function(error) {
-    console.log('Message Save Error: ', error);
+    messageSavePromise
+    .catch(function(error) {
+      console.log('Message Save Error: ', error);
+    });
   });
-
 };
 
 var saveUser = function(body, table) {
@@ -97,13 +116,4 @@ var saveUser = function(body, table) {
 
 };
 
-// query the database (for GET requests)
-exports.query = function() {
-
-};
-
-// remove from database (do we need this?)
-exports.remove = function() {
-
-};
         
