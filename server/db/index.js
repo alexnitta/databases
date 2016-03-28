@@ -20,11 +20,9 @@ exports.saveMessage = function(body, table) {
   // connection.connect();
   var roomExists = false;
   var userExists = false;
-  var roomId;
-  var userId;
+  var roomId, userId;
 
   console.dir(queryAsync);
-
 
   // check if room exists; if not, add it. Return the room Id. 
   var createRoomPromise = queryAsync('INSERT INTO Rooms VALUES (DEFAULT, "' + body.roomname + '")');
@@ -56,16 +54,26 @@ exports.saveMessage = function(body, table) {
       }
     });
 
-  // when userId and roomId are set 
-  promise.all([roomExistPromise, userExistPromise])
-  .then(function(roomUserIds) {
-    connection.query({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomUserIds[1], roomUserIds[0], body.message]}, function(error, results, fields) {
-      console.log('Message INSERT results: ', results);
-      console.log('Message INSERT error: ', error);
-      console.log('Message INSERT fields: ', fields);
+  // when userId and roomId are set, we will run this promise to write to the Messages table
+  
+  // var messageCreatePromise = queryAsync({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomId, userId, body.message]});
+  
+  // // queue up promises to get userId and roomId
+  
+  // promise.all([roomExistPromise, userExistPromise])
+  // .then(messageCreatePromise);
+  
+  // // this is the version we set up on Saturday, end of pair work
+  
+  // promise.all([roomExistPromise, userExistPromise])
+  // .then(function(roomUserIds) {
+  //   connection.query({sql: 'INSERT INTO Messages SET id=DEFAULT, User_ID=?, Room_ID=?, Text=?', values: [roomUserIds[1], roomUserIds[0], body.message]}, function(error, results, fields) {
+  //     console.log('Message INSERT results: ', results);
+  //     console.log('Message INSERT error: ', error);
+  //     console.log('Message INSERT fields: ', fields);
 
-    });
-  });
+  //   });
+  // });
 
   // connection.query('SELECT Id, Name FROM Rooms WHERE Name="' + body.roomname + '"', function(error, results, fields) {
     
